@@ -1,10 +1,16 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLocalStorage } from './hooks/useLocalStorage'
 
 export default function ListaCompraPage() {
-  const [items, setItems] = useState([])
+  const [items, setItems] = useLocalStorage('listaActual', [])
   const [newItem, setNewItem] = useState('')
+  const [mounted, setMounted] = useState(false)
+
+   useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const addItem = () => {
     if (newItem.trim() === '') return
@@ -12,6 +18,7 @@ export default function ListaCompraPage() {
     const item = {
       id: Date.now(),
       name: newItem,
+      tachado: false
       
     }
     setItems([...items, item])
@@ -19,8 +26,30 @@ export default function ListaCompraPage() {
     
   }
 
+  const toggleTachado = (id) => {
+    const upadatedItems = items.map(item => {
+      if (item.id === id) {
+        return { ...item, tachado: !item.tachado }
+      }
+      return item
+    })
+    setItems(upadatedItems) 
+  }
+
   const deleteItem = (id) => {
     setItems(items.filter(item => item.id !== id))
+  }
+
+  const resetList = () => {
+    setItems([])
+  }
+
+  if (!mounted) {
+    return (
+      <main className="min-h-screen p-8">
+          <p className="text-center text-gray-400">Cargando...</p>
+      </main>
+    )
   }
 
   return (
@@ -62,8 +91,19 @@ export default function ListaCompraPage() {
                   key={item.id}
                   className="flex items-center justify-between bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition"
                 >
-                  <div className="flex items-center gap-3">
-                    <span className="font-medium text-gray-800">{item.name}</span>
+                  <div 
+                  className='flex items-center gap-3 flex-1 cursor-pointer'
+                  onClick={()=> toggleTachado(item.id)}
+                  >
+                    {item.tachado && (
+                      <span className='text-green-500 text-xl'>✓</span>
+                    )}
+
+                    <span className={`font-medium text-gray-800 ${
+                      item.tachado ? 'line-through text-gray-400' : ''
+                    }`}>
+                      {item.name}
+                    </span>
                   </div>
                   <button
                     onClick={() => deleteItem(item.id)}
@@ -75,11 +115,17 @@ export default function ListaCompraPage() {
               ))
             )}
           </div>
-          <div className='flex justify-center'>
+          <div className='flex justify-center gap-6'>
             <button 
               className="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold"
             >
                 Hecho
+            </button>
+            <button 
+              className="mt-4 bg-amber-400 text-white px-6 py-3 rounded-lg hover:bg-amber-500 transition font-semibold"
+              onClick={resetList}
+            >
+                Reset
             </button>
           </div>
         </div>
