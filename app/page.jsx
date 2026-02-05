@@ -150,10 +150,10 @@ export default function ListaCompraPage() {
                 Hecho
             </button>
             <button 
-              className="mt-4 bg-amber-400 text-white px-6 py-3 rounded-lg hover:bg-amber-500 transition font-semibold"
+              className="mt-4 bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-600 transition font-semibold"
               onClick={resetList}
             >
-                Reset
+                Resetear Lista
             </button>
           </div>
         </div>
