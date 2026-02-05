@@ -9,7 +9,7 @@ export default function Navbar() {
   const isActive = (path) => pathname === path
 
   return (
-      <nav className='flex justify-center space-x-8'>
+      <nav className='flex justify-center space-x-1 sm:space-x-8'>
         <Link
           href="/"
           className={`px-6 py-2 rounded-lg font-semibold transition ${

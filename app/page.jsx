@@ -88,7 +88,7 @@ export default function ListaCompraPage() {
           </h1>
 
           {/* Formulario */}
-          <div className="flex gap-3 mb-6">
+          <div className="flex flex-col md:flex-row gap-3 mb-6">
             <input
               type="text"
               value={newItem}
@@ -142,7 +142,7 @@ export default function ListaCompraPage() {
               ))
             )}
           </div>
-          <div className='flex justify-center gap-6'>
+          <div className='flex flex-col md:flex-row justify-center gap-3 mb-6'>
             <button 
               className="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold"
               onClick={submitHandler}
@@ -153,7 +153,7 @@ export default function ListaCompraPage() {
               className="mt-4 bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-600 transition font-semibold"
               onClick={resetList}
             >
-                Resetear Lista
+                Resetear lista
             </button>
           </div>
         </div>
