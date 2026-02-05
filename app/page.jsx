@@ -101,7 +101,7 @@ export default function ListaCompraPage() {
             <button
               onClick={addItem}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition font-semibold"
-            >
+              >
               Añadir
             </button>
           </div>
@@ -116,28 +116,27 @@ export default function ListaCompraPage() {
               items.map(item => (
                 <div
                   key={item.id}
-                  className="flex items-center justify-between bg-gray-50 p-4 rounded-lg hover:bg-gray-100 transition"
-                >
-                  <div 
-                  className='flex items-center gap-3 flex-1 cursor-pointer'
-                  onClick={()=> toggleTachado(item.id)}
+                  className="flex items-center justify-between bg-gray-50 p-4 rounded-lg hover:bg-gray-200 transition"
                   >
-                    {item.tachado && (
-                      <span className='text-green-500 text-xl'>✓</span>
-                    )}
-
+                  <div 
+                    className='flex items-center gap-3 flex-1 cursor-pointer'
+                    onClick={()=> toggleTachado(item.id)}
+                    >
+                    {item.tachado ? (
+                      <span className='text-green-500 text-2xl font-bold'>✓</span>
+                    ):(<span className='text-gray-400 text-2xl font-bold'>✓</span>)}
                     <span className={`font-medium text-gray-800 ${
                       item.tachado ? 'line-through text-gray-400' : ''
                     }`}>
                       {item.name}
                     </span>
                   </div>
-                  <button
+                  <span
                     onClick={() => deleteItem(item.id)}
-                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-sm"
+                    className="text-red-500 text-2xl px-4 py-2 rounded hover:bg-red-600 hover:text-white transition cursor-pointer"
                   >
-                    Eliminar
-                  </button>
+                    ✘
+                  </span>
                 </div>
               ))
             )}
@@ -146,13 +145,13 @@ export default function ListaCompraPage() {
             <button 
               className="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold"
               onClick={submitHandler}
-            >
+              >
                 Hecho
             </button>
             <button 
               className="mt-4 bg-amber-500 text-white px-6 py-3 rounded-lg hover:bg-amber-600 transition font-semibold"
               onClick={resetList}
-            >
+              >
                 Resetear lista
             </button>
           </div>

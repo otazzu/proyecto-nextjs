@@ -9,6 +9,7 @@ export default function HistorialPage() {
   const [historial, setHistorial] = useLocalStorage('listaHistorial', [])
   const [listaActual, setListaActual] = useLocalStorage('listaActual', [])
   const [mounted, setMounted] = useState(false)
+  const [showDeleteBtn, setShowDeleteBtn] = useState(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -35,6 +36,10 @@ export default function HistorialPage() {
     router.push('/')
   }
 
+  const deleteHistorial = (id) => {
+    setHistorial(historial.filter(item => item.id !== id))
+  }
+
   if (!mounted) {
     return (
       <main className="min-h-screen p-8">
@@ -58,10 +63,12 @@ export default function HistorialPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {historial.map(compra => (
               <div
+                onMouseEnter={() => setShowDeleteBtn(compra.id)}
+                onMouseLeave={() => setShowDeleteBtn(null)}
                 key={compra.id}
                 onClick={() => repetirCompra(compra)}
-                className="bg-white rounded-lg shadow-md hover:shadow-xl transition p-6 border-t-4 border-blue-500 cursor-pointer"
-              >
+                className="relative bg-white rounded-lg shadow-md hover:shadow-xl transition p-6 border-t-4 border-blue-500 cursor-pointer"
+                >
                 {/* Fecha y cantidad de items */}
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -92,6 +99,17 @@ export default function HistorialPage() {
                     ))}
                   </ul>
                 </div>
+                {showDeleteBtn === compra.id && (
+                  <span 
+                    className='absolute bottom-2 right-2 text-red-500 text-2xl p-2 rounded-md hover:bg-red-600 hover:text-white'
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      deleteHistorial(compra.id)
+                    }}
+                    >
+                      ✘
+                  </span>
+                )}
               </div>
             ))}
           </div>

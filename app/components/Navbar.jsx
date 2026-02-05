@@ -17,7 +17,7 @@ export default function Navbar() {
               ? 'bg-white text-blue-600 shadow-md'
               : 'text-white hover:bg-amber-400'
           }`}
-        >
+          >
           📝 Lista de Compra
         </Link>
 
@@ -28,7 +28,7 @@ export default function Navbar() {
               ? 'bg-white text-blue-600 shadow-md'
               : 'text-white hover:bg-amber-400'
           }`}
-        >
+          >
           ⚠️ Faltantes
         </Link>
 
@@ -39,7 +39,7 @@ export default function Navbar() {
               ? 'bg-white text-blue-600 shadow-md'
               : 'text-white hover:bg-amber-400'
           }`}
-        >
+          >
           📊 Historial
         </Link>
 
