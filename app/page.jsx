@@ -7,6 +7,8 @@ export default function ListaCompraPage() {
   const [items, setItems] = useLocalStorage('listaActual', [])
   const [newItem, setNewItem] = useState('')
   const [mounted, setMounted] = useState(false)
+  const [historial, setHistorial] = useLocalStorage('listaHistorial', [])
+  const [faltantes, setFaltantes] = useLocalStorage('listaFaltantes', [])
 
    useEffect(() => {
     setMounted(true)
@@ -16,7 +18,7 @@ export default function ListaCompraPage() {
     if (newItem.trim() === '') return
     
     const item = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
       name: newItem,
       tachado: false
       
@@ -41,6 +43,31 @@ export default function ListaCompraPage() {
   }
 
   const resetList = () => {
+    setItems([])
+  }
+
+  const submitHandler = () => {
+
+    if (items.length === 0) return
+
+    const comprados = items.filter(item => item.tachado)
+    const noComprados = items.filter(item => !item.tachado)
+
+    if (noComprados.length > 0) {
+    setFaltantes([...faltantes, { 
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(), 
+      items: noComprados 
+    }])
+  }
+  
+  if (comprados.length > 0) {
+    setHistorial([...historial, { 
+      id: crypto.randomUUID(),
+      date: new Date().toISOString(), 
+      items: comprados 
+    }])
+  }
     setItems([])
   }
 
@@ -118,6 +145,7 @@ export default function ListaCompraPage() {
           <div className='flex justify-center gap-6'>
             <button 
               className="mt-4 bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition font-semibold"
+              onClick={submitHandler}
             >
                 Hecho
             </button>

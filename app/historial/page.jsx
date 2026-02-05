@@ -1,21 +1,47 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import { useLocalStorage } from '../hooks/useLocalStorage'
+import { useRouter } from 'next/navigation'
+
 export default function HistorialPage() {
-  const compras = [
-    { 
-      id: 1, 
-      date: '2024-02-01', 
-      items: ['Leche', 'Pan', 'Huevos'], 
-    },
-    { 
-      id: 2, 
-      date: '2024-01-28', 
-      items: ['Queso', 'Jamón', 'Yogur'], 
-    },
-    { 
-      id: 3, 
-      date: '2024-01-25', 
-      items: ['Arroz', 'Pasta', 'Aceite', 'Tomate'], 
-    },
-  ]
+
+  const [historial, setHistorial] = useLocalStorage('listaHistorial', [])
+  const [listaActual, setListaActual] = useLocalStorage('listaActual', [])
+  const [mounted, setMounted] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  const formatearFecha = (isoString) => {
+  const fecha = new Date(isoString)
+  
+  const dia = String(fecha.getDate()).padStart(2, '0')
+  const mes = String(fecha.getMonth() + 1).padStart(2, '0')
+  const año = fecha.getFullYear()
+  
+  return `${dia}/${mes}/${año}`
+  }
+
+  const repetirCompra = (compra) => {
+    const nuevaLista = compra.items.map(item => ({
+      id: crypto.randomUUID(),
+      name: item.name,
+      tachado: false
+    }))
+    setListaActual(nuevaLista)
+    router.push('/')
+  }
+
+  if (!mounted) {
+    return (
+      <main className="min-h-screen p-8">
+        <p className="text-center text-white">Cargando...</p>
+      </main>
+    )
+  }
 
   return (
     <main className="min-h-screen p-8">
@@ -24,29 +50,44 @@ export default function HistorialPage() {
           <h1 className="text-4xl font-bold text-gray-800 mb-8">
             📊 Historial de Compras
           </h1>
-
+          {historial.length === 0 ? (
+            <p className="text-center text-gray-400 text-lg">
+              No hay compras en el historial todavía.
+            </p>
+      ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {compras.map(compra => (
+            {historial.map(compra => (
               <div
                 key={compra.id}
-                className="bg-white rounded-lg shadow-md hover:shadow-xl transition p-6 border-t-4 border-blue-500"
+                onClick={() => repetirCompra(compra)}
+                className="bg-white rounded-lg shadow-md hover:shadow-xl transition p-6 border-t-4 border-blue-500 cursor-pointer"
               >
+                {/* Fecha y cantidad de items */}
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <p className="text-sm text-gray-500 uppercase font-semibold">Fecha</p>
-                    <p className="text-lg font-bold text-gray-800">{compra.date}</p>
+                    <p className="text-lg font-bold text-gray-800">
+                      {formatearFecha(compra.date)}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm text-gray-500 uppercase font-semibold">Items</p>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {compra.items.length}
+                    </p>
                   </div>
                 </div>
 
+                {/* Lista de productos */}
                 <div className="border-t pt-4">
                   <p className="text-sm font-semibold text-gray-700 mb-2">
-                    Productos ({compra.items.length}):
+                    Productos comprados:
                   </p>
                   <ul className="space-y-1">
-                    {compra.items.map((item, index) => (
-                      <li key={index} className="text-sm text-gray-600 flex items-center gap-2">
+                    {compra.items.map((item) => (
+                      <li key={item.id} className="text-sm text-gray-600 flex items-center gap-2">
                         <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-                        {item}
+                        {item.name}
                       </li>
                     ))}
                   </ul>
@@ -54,6 +95,7 @@ export default function HistorialPage() {
               </div>
             ))}
           </div>
+          )}
         </div>
       </div>
     </main>
